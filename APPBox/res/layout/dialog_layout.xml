@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent" android:weightSum="1">
+    <TextView android:text="@string/new_box_name" android:id="@+id/add_dialog_name" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+    <EditText android:id="@+id/add_dialog_name_editer" android:layout_height="wrap_content" android:layout_width="fill_parent"></EditText>
+    <TextView android:text="@string/new_box_pic" android:id="@+id/add_dialog_pic" android:layout_width="wrap_content" android:layout_height="wrap_content"></TextView>
+    <ImageButton android:id="@+id/select_box_icon" android:layout_width="wrap_content" android:src="@drawable/add_icon_in_box" android:layout_height="wrap_content" android:layout_gravity="center"></ImageButton>
+</LinearLayout>

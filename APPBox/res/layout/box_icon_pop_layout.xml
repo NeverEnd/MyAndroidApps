@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/box_icon_pop_layout" 
+  android:layout_width="wrap_content" 
+  android:layout_height="wrap_content"
+  android:background="@drawable/bubble_background"
+  android:paddingLeft="5px"
+  android:paddingRight="5px"
+  android:paddingTop="5px"
+  android:paddingBottom="10px"
+  
+  >
+    <ImageButton 
+    	android:layout_height="wrap_content" 
+    	android:layout_width="wrap_content" 
+    	android:id="@+id/imageButton1" android:src="@drawable/box_icon_1"></ImageButton>
+    <ImageButton android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/imageButton2" android:src="@drawable/box_icon_2"></ImageButton>
+</LinearLayout>

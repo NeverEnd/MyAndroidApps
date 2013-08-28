@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="hello">Hello World, Appbox!</string>
+    <string name="app_name">应用盒子</string>
+    <string name="app_version">1</string>
+    <string name="add_box">添加分组</string>
+    <string name="activity_not_found" msgid="3571057450431950427">"您的手机上未安装应用程序。"</string>
+    <string name="new_box_name">分组名称</string>
+    <string name="new_box_pic">分组图标</string>
+    <string name="no_lrc">没有歌词</string>
+</resources>
