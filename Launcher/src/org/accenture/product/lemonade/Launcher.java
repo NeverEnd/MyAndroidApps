@@ -264,7 +264,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 		luanchr = this;
 		// if (org.accenture.product.lemonade.util.Configuration.debug)
 		// {
-		// // 测试获取当前主题
+		// // 娴嬭瘯鑾峰彇褰撳墠涓婚
 		//
 		// SceneBean sceneBean = getCurrentScene();
 		//
@@ -298,7 +298,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
 		setContentView(R.layout.launcher);
 		// Button button=(Button) findViewById(R.id.my);
-		// button.setText("去人开餐馆卡");
+		// button.setText("鍘讳汉寮�棣嗗崱");
 		setupViews();
 
 		// registerContentObservers();
@@ -326,14 +326,14 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 		registerReceiver(mCloseSystemDialogsReceiver, filter);
 		LauncherActions.getInstance().init(this);
 
-		// 启动锁屏服务
+		// 鍚姩閿佸睆鏈嶅姟
 		// Intent intent = new Intent(this, LockService.class);
 		// startService(intent);
 
 	}
 
 	/**
-	 * 得到当前场景
+	 * 寰楀埌褰撳墠鍦烘櫙
 	 * 
 	 * @return
 	 */
@@ -695,7 +695,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
 				if (cn.provider.getClassName().contains("Search"))
 				{
-					mAppWidgetManager.bindAppWidgetId(appWidgetId, cn.provider);
+					mAppWidgetManager.bindAppWidgetIdIfAllowed(appWidgetId, cn.provider);
 					widgetDataBaseAdapter.open();
 					widgetDataBaseAdapter.insert(appWidgetId, 0, 0, 4, 1, 3, WidgetEnum.WidgetItem, 1);
 					widgetDataBaseAdapter.close();
@@ -847,7 +847,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 		widgetBean.setScreen(mWorkspace.getCurrentScreen());
 		widgetBean.setType(WidgetEnum.WidgetItem);
 		widgetBean.setScene(getCurrentScene().getId());
-		// TODO: 请加上 widget type 取费 widget 还是 app
+		// TODO: 璇峰姞涓�widget type 鍙栬垂 widget 杩樻槸 app
 
 		// Intent intent = new Intent();
 		// intent.setAction(WidgetReceiver.ADD_WIDGET);
@@ -861,7 +861,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
 		adapter.close();
 
-		// 测试添加widget到场景
+		// 娴嬭瘯娣诲姞widget鍒板満鏅�
 
 		launcherInfo.id = id;
 
@@ -1690,7 +1690,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 		//
 		// return true;
 
-		menu.add("menu");// 必须创建一项
+		menu.add("menu");// 蹇呴』鍒涘缓涓�」
 		return super.onCreateOptionsMenu(menu);
 
 	}
@@ -1713,7 +1713,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
 						LayoutInflater f = getLayoutInflater();
 
-						final View view = f.createView(name, null, attrs); // 尝试创建我们自己布局
+						final View view = f.createView(name, null, attrs); // 灏濊瘯鍒涘缓鎴戜滑鑷繁甯冨眬
 
 						new Handler().post(new Runnable()
 						{
@@ -1721,7 +1721,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 							public void run()
 							{
 
-								view.setBackgroundResource(R.drawable.menu_bar_background); // 设置背景为我们自定义的图片，替换cwj_bg文件即可
+								view.setBackgroundResource(R.drawable.menu_bar_background); // 璁剧疆鑳屾櫙涓烘垜浠嚜瀹氫箟鐨勫浘鐗囷紝鏇挎崲cwj_bg鏂囦欢鍗冲彲
 
 							}
 
@@ -3568,7 +3568,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 	}
 
 	/**
-	 * 换icon包后刷新桌面
+	 * 鎹con鍖呭悗鍒锋柊妗岄潰
 	 */
 	public void refreshDesttopforIconChange()
 	{
@@ -3619,7 +3619,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 		sceneDateBaseAdapter.addScreen(sceneBean);
 		sceneDateBaseAdapter.close();
 
-		// 如果是往前插
+		// 濡傛灉鏄線鍓嶆彃
 		if (index == 0)
 		{
 
@@ -3627,7 +3627,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 			adapter.open();
 			adapter.addScreenByScene(sceneBean.getId());
 			adapter.close();
-			// 修改app代码
+			// 淇敼app浠ｇ爜
 			LauncherProvider.DatabaseHelper databaseHelper = new LauncherProvider.DatabaseHelper(this);
 			databaseHelper.addScreenByScene(sceneBean.getId());
 
@@ -3645,7 +3645,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 
 		SceneBean sceneBean = getCurrentScene();
 		SceneDateBaseAdapter adapter = SceneDateBaseAdapter.getInstance();
-		// scene屏数减一
+		// scene灞忔暟鍑忎竴
 		adapter.open();
 		adapter.setScreenValue(sceneBean, sceneBean.getScreenCount() - 1);
 		adapter.close();
@@ -3694,7 +3694,7 @@ public final class Launcher extends Activity implements View.OnClickListener, On
 		Intent it = new Intent(this, MenuActivity.class);
 		startActivity(it);
 
-		return false;// 返回为true 则显示系统menu
+		return false;// 杩斿洖涓簍rue 鍒欐樉绀虹郴缁焟enu
 	}
 
 }

@@ -3,12 +3,9 @@ package com.banhong.APPBox;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.PopupWindow;
 
 public class AddBoxDialog extends AlertDialog {
 	private Builder builder;

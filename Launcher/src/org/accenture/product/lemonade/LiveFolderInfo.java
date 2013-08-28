@@ -6,6 +6,7 @@ package org.accenture.product.lemonade;
 import java.util.List;
 
 import org.accenture.product.lemonade.settings.LauncherSettings;
+import org.accenture.product.lemonade.settings.LauncherSettings.BaseLauncherColumns;
 
 import android.content.ContentValues;
 import android.content.Intent;
@@ -38,7 +39,7 @@ class LiveFolderInfo extends FolderInfo implements ItemInfo.ItemPackage {
         super.onAddToDatabase(values);
         values.put(LauncherSettings.Favorites.URI, uri.toString());
         if (baseIntent != null) {
-            values.put(LauncherSettings.Favorites.INTENT, baseIntent.toUri(0));
+            values.put(BaseLauncherColumns.INTENT, baseIntent.toUri(0));
         }
         values.put(LauncherSettings.Favorites.DISPLAY_MODE, displayMode);
     }

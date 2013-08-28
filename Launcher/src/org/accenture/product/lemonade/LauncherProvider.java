@@ -224,7 +224,7 @@ public class LauncherProvider extends ContentProvider
 
 			initAPP(db);
 
-			// 这个地方会出现bug所以关闭
+			// 杩欎釜鍦版柟浼氬嚭鐜癰ug鎵�互鍏抽棴
 			// Database was just created, so wipe any previous widgets
 			// if (mAppWidgetHost != null)
 			// {
@@ -240,7 +240,7 @@ public class LauncherProvider extends ContentProvider
 		}
 
 		/**
-		 * 添加默认的app
+		 * 娣诲姞榛樿鐨刟pp
 		 * 
 		 * @param db
 		 */
@@ -382,13 +382,13 @@ public class LauncherProvider extends ContentProvider
 			String camera = "#Intent;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;launchFlags=0x10200000;component=com.google.android.camera/com.android.camera.Camera;end";
 			addInitAPP(db, camera, -100, 3, 3, 3,1, 1, 1, -1, 0, 4);
 
-			// for Travel 第5
+			// for Travel 绗�
 			addInitAPP(db, contacts, -100, 3, 0, 3,1, 1, 1, -1, 0, 5);
 			addInitAPP(db, map, -100, 3, 1, 3,1, 1, 1, -1, 0, 5);
 			addInitAPP(db, browser, -100, 3, 2, 3,1, 1, 1, -1, 0, 5);
 			addInitAPP(db, camera, -100, 3, 3, 3,1, 1, 1, -1, 0, 5);
 
-			// for Customized 第6
+			// for Customized 绗�
 			addInitAPP(db, contacts, -100, 3, 0, 3,1, 1, 1, -1, 0, 6);
 			addInitAPP(db, map, -100, 3, 1, 3,1, 1, 1, -1, 0, 6);
 			addInitAPP(db, browser, -100, 3, 2, 3,1, 1, 1, -1, 0, 6);
@@ -861,17 +861,17 @@ public class LauncherProvider extends ContentProvider
 
 						if (favoriteType == Favorites.ITEM_TYPE_WIDGET_CLOCK)
 						{
-							appWidgetManager.bindAppWidgetId(appWidgetId, new ComponentName("com.android.alarmclock",
+							appWidgetManager.bindAppWidgetIdIfAllowed(appWidgetId, new ComponentName("com.android.alarmclock",
 									"com.android.alarmclock.AnalogAppWidgetProvider"));
 						}
 						else if (favoriteType == Favorites.ITEM_TYPE_WIDGET_PHOTO_FRAME)
 						{
-							appWidgetManager.bindAppWidgetId(appWidgetId, new ComponentName("com.android.camera",
+							appWidgetManager.bindAppWidgetIdIfAllowed(appWidgetId, new ComponentName("com.android.camera",
 									"com.android.camera.PhotoAppWidgetProvider"));
 						}
 						else if (favoriteType == Favorites.ITEM_TYPE_WIDGET_SEARCH)
 						{
-							appWidgetManager.bindAppWidgetId(appWidgetId, getSearchWidgetProvider());
+							appWidgetManager.bindAppWidgetIdIfAllowed(appWidgetId, getSearchWidgetProvider());
 						}
 					}
 					catch (RuntimeException ex)
@@ -1098,7 +1098,7 @@ public class LauncherProvider extends ContentProvider
 
 				allocatedAppWidgets = true;
 
-				appWidgetManager.bindAppWidgetId(appWidgetId, cn);
+				appWidgetManager.bindAppWidgetIdIfAllowed(appWidgetId, cn);
 			}
 			catch (RuntimeException ex)
 			{

@@ -3,8 +3,6 @@ package org.accenture.product.lemonade;
 import java.lang.reflect.Method;
 
 import org.accenture.product.lemonade.R;
-import org.accenture.product.lemonade.actions.DefaultAction;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
