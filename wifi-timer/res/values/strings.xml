@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="PhoneOpenReciver"></string>
+    <string name="hello">Hello World, wifiTimer!</string>
+    <string name="app_name">WIFI-timer</string>
+    <string name="setOpen_off">打开定时WIFI功能</string>
+	<string name="setStartTimer">设置打开时间</string>
+	<string name="setEndTimer">设置单次开启时长</string>
+</resources>
