@@ -70,9 +70,7 @@ public class wifiTimer extends PreferenceActivity implements OnSharedPreferenceC
             setsummary(StartTimeSet, EndTimeSet, db);
             Intent service = new Intent(this, wifiTimerService.class);
             stopService(service);
-
             startService(service);
-
         }
         else {
             //dataclean();

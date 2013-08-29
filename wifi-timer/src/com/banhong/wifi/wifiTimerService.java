@@ -10,11 +10,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.IBinder;
+import com.banhong.wifi.DB;
 
 public class wifiTimerService extends Service {
     private AlarmManager open_wifi = null;
     private AlarmManager stop_wifi = null;
-
+    private DB db=null;
     @Override
     public IBinder onBind(Intent intent) {
         // TODO Auto-generated method stub
@@ -25,20 +26,20 @@ public class wifiTimerService extends Service {
     public void onCreate() {
         open_wifi = (AlarmManager) getSystemService(ALARM_SERVICE);
         stop_wifi = (AlarmManager) getSystemService(ALARM_SERVICE);
+        db= new DB(this);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        int starthour = intent.getIntExtra("startHour", 0);
-        int startmin = intent.getIntExtra("startMin", 0);
-        int endhour = intent.getIntExtra("EndHour", 0);
-        int endmin = intent.getIntExtra("EndMin", 0);
+        int starthour = db.getStartTime().hour;
+        int startmin = db.getStartTime().minute;
+        int endhour = db.getEndTime().hour;
+        int endmin = db.getEndTime().minute;
+        			 
         long tempmillin = 0;
+        
         Calendar systemtime = Calendar.getInstance();
         Calendar optiontime = Calendar.getInstance();
-
-        // Date systemtime = new Date(System.currentTimeMillis());
-        // Date option_time = new Date(systemtime.getDate());
         optiontime.set(systemtime.get(Calendar.YEAR), systemtime.get(Calendar.MONTH), systemtime.get(Calendar.DAY_OF_MONTH), starthour, startmin, systemtime.get(Calendar.SECOND));
         long millinCut = optiontime.getTimeInMillis() - systemtime.getTimeInMillis();
         if (millinCut <= 0) {
@@ -51,11 +52,6 @@ public class wifiTimerService extends Service {
         Intent Openreciver = new Intent(this, WifiOpenTimeOut.class);
         PendingIntent Opensender = PendingIntent.getBroadcast(this, 0, Openreciver, 0);
         open_wifi.setRepeating(AlarmManager.RTC, tempmillin, 24 * 60 * 60 * 1000, Opensender);
-
-        // optiontime.set(systemtime.get(Calendar.YEAR),
-        // systemtime.get(Calendar.MONTH),
-        // systemtime.get(Calendar.DAY_OF_MONTH),endhour, endmin,
-        // systemtime.get(Calendar.SECOND));
 
         if (endhour == 0 && endmin == 0) {
             tempmillin = 1;

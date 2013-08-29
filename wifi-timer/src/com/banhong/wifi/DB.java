@@ -22,11 +22,8 @@ public class DB extends SQLiteOpenHelper {
     private SQLiteDatabase wifi_db;
 
     public DB(Context context) {
-
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         wifi_db = this.getWritableDatabase();
-
-        // TODO Auto-generated constructor stub
     }
 
     @Override

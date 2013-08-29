@@ -75,7 +75,7 @@ public class AppBox extends Activity {
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
         applist = pm.queryIntentActivities(intent, 0);
         //applist = getPackageManager().getInstalledApplications(android.content.pm.PackageManager.GET_META_DATA);
-        // 生成动态数组，并且转入数据  
+        // 生成动态数组，并且转入数据   
         Collections.sort(applist, new ResolveInfo.DisplayNameComparator(getPackageManager()));
 
         
