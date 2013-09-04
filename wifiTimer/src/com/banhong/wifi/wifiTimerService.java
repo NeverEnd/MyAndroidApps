@@ -1,6 +1,10 @@
 package com.banhong.wifi;
 
+import java.text.MessageFormat;
 import java.util.Calendar;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.SearchManager;
@@ -9,13 +13,20 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
+import android.os.Bundle;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
+import android.os.Message;
+
 import com.banhong.wifi.DB;
 
 public class wifiTimerService extends Service {
     private AlarmManager open_wifi = null;
     private AlarmManager stop_wifi = null;
     private DB db=null;
+    private Timer open_timer;
+    private Timer close_timer;
     @Override
     public IBinder onBind(Intent intent) {
         // TODO Auto-generated method stub
@@ -31,80 +42,68 @@ public class wifiTimerService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        
+        if (!db.getServiceState())
+            return START_STICKY;
+
         int starthour = db.getStartTime().hour;
         int startmin = db.getStartTime().minute;
         int endhour = db.getEndTime().hour;
         int endmin = db.getEndTime().minute;
         			 
-        long tempmillin = 0;
-        
         Calendar systemtime = Calendar.getInstance();
         Calendar optiontime = Calendar.getInstance();
         optiontime.set(systemtime.get(Calendar.YEAR), systemtime.get(Calendar.MONTH), systemtime.get(Calendar.DAY_OF_MONTH), starthour, startmin, systemtime.get(Calendar.SECOND));
-        long millinCut = optiontime.getTimeInMillis() - systemtime.getTimeInMillis();
-        if (millinCut <= 0) {
-            tempmillin = 0;
-        }
-        else {
-            tempmillin = millinCut;
-        }
-
-        Intent Openreciver = new Intent(this, WifiOpenTimeOut.class);
-        PendingIntent Opensender = PendingIntent.getBroadcast(this, 0, Openreciver, 0);
-        open_wifi.setRepeating(AlarmManager.RTC, tempmillin, 24 * 60 * 60 * 1000, Opensender);
-
-        if (endhour == 0 && endmin == 0) {
-            tempmillin = 1;
-        }
-        else {
-            tempmillin = systemtime.getTimeInMillis() + endhour * 60 * 60 * 1000 + endmin * 60 * 1000;
-        }
-
-        Intent Stopreciver = new Intent(this, WifiStopTimeOut.class);
-        PendingIntent Stopsender = PendingIntent.getBroadcast(this, 0, Stopreciver, 0);
-        stop_wifi.setRepeating(AlarmManager.RTC, tempmillin, 24 * 60 * 60 * 1000, Stopsender);
-
+        
+        open_timer =new Timer();
+        close_timer = new Timer();
+        myTimerTask openWIFI_task = new myTimerTask(1);
+        myTimerTask closeWIFI_task = new myTimerTask(2);
+        
+        open_timer.schedule(openWIFI_task, optiontime.getTime());
+        optiontime.add(Calendar.MINUTE, endmin);
+        optiontime.add(Calendar.HOUR_OF_DAY, endhour);
+        close_timer.schedule(closeWIFI_task, optiontime.getTime(), 24*60*60*1000);
+        
         return START_STICKY;
     }
-
+      
+    private class myTimerTask extends TimerTask{
+        private Handler my_handler;
+        private Message msg;
+        
+        public myTimerTask(int timerType){
+            msg = new Message();
+            msg.arg1=timerType;
+        }
+        
+        @Override
+        public void run() {
+            // TODO Auto-generated method stub
+            my_handler = new Handler(){
+                
+                @Override
+                public void handleMessage(Message msg){
+                    super.handleMessage(msg);
+                    if(msg.arg1==1){
+                        WifiManager wifiM = (WifiManager) getSystemService(WIFI_SERVICE);
+                        wifiM.setWifiEnabled(true);
+                    }
+                    else if(msg.arg1==2)
+                    {
+                        WifiManager wifiM = (WifiManager) getSystemService(WIFI_SERVICE);
+                        wifiM.setWifiEnabled(false);
+                    }
+                }
+            };
+            my_handler.sendMessage(msg);
+        }
+    };
     @Override
     public void onDestroy() {
-        Intent Openreciver = new Intent(this, WifiOpenTimeOut.class);
-        PendingIntent Opensender = PendingIntent.getBroadcast(this, 0, Openreciver, 0);
-        open_wifi.cancel(Opensender);
-
-        Intent Stopreciver = new Intent(this, WifiStopTimeOut.class);
-        PendingIntent Stopsender = PendingIntent.getBroadcast(this, 0, Stopreciver, 0);
-
-        stop_wifi.cancel(Stopsender);
+        open_timer.cancel();
+        close_timer.cancel();
     }
 
-    public class WifiOpenTimeOut extends BroadcastReceiver {
 
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // TODO Auto-generated method stub
-            WifiManager wifiM = (WifiManager) getSystemService(WIFI_SERVICE);
-            wifiM.setWifiEnabled(true);
-            // SearchManager wifiM =
-            // (SearchManager)getSystemService(SEARCH_SERVICE);
-            // wifiM.startSearch("11111", true, intent.getComponent(), null,
-            // false);
-
-        }
-    }
-
-    public class WifiStopTimeOut extends BroadcastReceiver {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // TODO Auto-generated method stub
-            // SearchManager wifiM =
-            // (SearchManager)getSystemService(SEARCH_SERVICE);
-            // wifiM.stopSearch();
-            WifiManager wifiM = (WifiManager) getSystemService(WIFI_SERVICE);
-            wifiM.setWifiEnabled(false);
-        }
-
-    }
 }

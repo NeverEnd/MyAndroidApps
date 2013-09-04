@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
-  xmlns:android="http://schemas.android.com/apk/res/android">
+  xmlns:android="http://schemas.android.com/apk/res/android" android:persistent="true">
 	<CheckBoxPreference android:key="setOpen" android:title="@string/setOpen_off"/>
 	<Preference android:key="setStarttimer" 
 	    		android:title="@string/setStartTimer"
-				android:dependency="@string/setOpen_off"/>
+				/>
 	
-	<Preference android:key="setEndtimer" android:title="@string/setEndTimer" android:dependency="@string/setStartTimer"/>
+	<Preference android:key="setEndtimer" android:title="@string/setEndTimer" />
 	
 </PreferenceScreen>
