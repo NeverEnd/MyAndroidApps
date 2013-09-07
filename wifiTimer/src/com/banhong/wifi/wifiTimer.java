@@ -21,7 +21,7 @@ import android.widget.TimePicker;
 import com.banhong.wifi.wifiTimerService;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-public class wifiTimer extends PreferenceActivity implements OnSharedPreferenceChangeListener, OnPreferenceClickListener {
+public class wifiTimer extends PreferenceActivity implements OnPreferenceClickListener {
     public static final String WIFI_TIME_PREFERENCE = "WIFI_TIME";
     private static CheckBoxPreference OpenCheckbox = null;
     private static Preference StartTimeSet = null;
@@ -29,14 +29,13 @@ public class wifiTimer extends PreferenceActivity implements OnSharedPreferenceC
     private TimePickerDialog time_dialog = null;
     
     private DB db = null;
-
+    private boolean cancled = false; 
     /** Called when the activity is first created. */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getPreferenceManager().setSharedPreferencesName(WIFI_TIME_PREFERENCE);
         addPreferencesFromResource(R.xml.preference);
-        getPreferenceScreen().getSharedPreferences().registerOnSharedPreferenceChangeListener(this);
         getPreferenceScreen().setPersistent(true);
         OpenCheckbox = (CheckBoxPreference) getPreferenceScreen().getPreference(0);
         StartTimeSet = (Preference) getPreferenceScreen().getPreference(1);
@@ -46,12 +45,6 @@ public class wifiTimer extends PreferenceActivity implements OnSharedPreferenceC
         EndTimeSet.setOnPreferenceClickListener(this);
         
         db = new DB(this);
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences arg0, String arg1) {
-        // TODO Auto-generated method stub
-        System.out.append("111111111111");
     }
 
     public void setsummary(Preference pre, Preference pre2, DB db) {
@@ -122,76 +115,84 @@ public class wifiTimer extends PreferenceActivity implements OnSharedPreferenceC
     public void setStartTime(final boolean isFirst) {
         int startHour = db.getStartTime().hour;
         int startMin = db.getStartTime().minute;
-
+        cancled = false;        
         time_dialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 // TODO Auto-generated method stub
                 db.setTime(hourOfDay, minute, true);
                 setsummary(StartTimeSet, EndTimeSet, db);
-                if(!isFirst)
-                    UpdateTimerService();
             }
 
         }, startHour, startMin, true);
 
-        if (isFirst) {
-            time_dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        time_dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
 
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    // TODO Auto-generated method stub
-                    setTimerLength(isFirst);
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                // TODO Auto-generated method stub
+                if(!cancled){
+                    if(isFirst)
+                        setTimerLength(isFirst);   
+                    else
+                        UpdateTimerService();
                 }
-            });
+            }
+        });
+        
+        time_dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 
-            time_dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-
-                @Override
-                public void onCancel(DialogInterface dialog) {
-                    // TODO Auto-generated method stub
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                // TODO Auto-generated method stub
+                if (isFirst) {
                     db.setSwitch(false);
                     wifiTimerClose();
                 }
-            });
-        }
+                cancled = true;
+            }
+        });
+      
         time_dialog.show();
     }
 
-    public void setTimerLength(boolean isFirst) {
+    public void setTimerLength(final boolean isFirst) {
         int endHour = db.getEndTime().hour;
         int endMin = db.getEndTime().minute;
-
+        cancled = false;
         time_dialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 db.setSwitch(true);
                 db.setTime(hourOfDay, minute, false);
                 setsummary(StartTimeSet, EndTimeSet, db);
-                UpdateTimerService();
+                
             }
         }, endHour, endMin, true);
 
-        if (isFirst) {
-            time_dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        time_dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
 
-                @Override
-                public void onDismiss(DialogInterface dialog) {
-                    // TODO Auto-generated method stub
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                // TODO Auto-generated method stub
+                if(!cancled)
+                    UpdateTimerService();
+            }
+        });
+        
 
-                }
-            });
+        time_dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 
-            time_dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-
-                @Override
-                public void onCancel(DialogInterface dialog) {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                if(isFirst){
                     db.setSwitch(false);
                     wifiTimerClose();
                 }
-            });
+                cancled = true;
+            }
+        });
 
-        }
         time_dialog.show();
 
     }

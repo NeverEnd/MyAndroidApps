@@ -2,6 +2,7 @@ package com.banhong.wifi;
 
 import java.text.MessageFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -22,11 +23,12 @@ import android.os.Message;
 import com.banhong.wifi.DB;
 
 public class wifiTimerService extends Service {
-    private AlarmManager open_wifi = null;
-    private AlarmManager stop_wifi = null;
+
     private DB db=null;
     private Timer open_timer;
     private Timer close_timer;
+    private myTimerTask openWIFI_task;
+    private myTimerTask closeWIFI_task;
     @Override
     public IBinder onBind(Intent intent) {
         // TODO Auto-generated method stub
@@ -35,9 +37,11 @@ public class wifiTimerService extends Service {
 
     @Override
     public void onCreate() {
-        open_wifi = (AlarmManager) getSystemService(ALARM_SERVICE);
-        stop_wifi = (AlarmManager) getSystemService(ALARM_SERVICE);
         db= new DB(this);
+        open_timer =new Timer();
+        close_timer = new Timer();
+        openWIFI_task = new myTimerTask(1);
+        closeWIFI_task = new myTimerTask(2);
     }
 
     @Override
@@ -50,20 +54,24 @@ public class wifiTimerService extends Service {
         int startmin = db.getStartTime().minute;
         int endhour = db.getEndTime().hour;
         int endmin = db.getEndTime().minute;
-        			 
-        Calendar systemtime = Calendar.getInstance();
-        Calendar optiontime = Calendar.getInstance();
-        optiontime.set(systemtime.get(Calendar.YEAR), systemtime.get(Calendar.MONTH), systemtime.get(Calendar.DAY_OF_MONTH), starthour, startmin, systemtime.get(Calendar.SECOND));
-        
-        open_timer =new Timer();
-        close_timer = new Timer();
-        myTimerTask openWIFI_task = new myTimerTask(1);
-        myTimerTask closeWIFI_task = new myTimerTask(2);
-        
-        open_timer.schedule(openWIFI_task, optiontime.getTime());
-        optiontime.add(Calendar.MINUTE, endmin);
-        optiontime.add(Calendar.HOUR_OF_DAY, endhour);
-        close_timer.schedule(closeWIFI_task, optiontime.getTime(), 24*60*60*1000);
+        			    
+        Date date = new Date(System.currentTimeMillis());
+        date.setHours(starthour);
+        date.setMinutes(startmin);
+        date.setSeconds(0);
+        openWIFI_task.cancel();
+        closeWIFI_task.cancel();
+        openWIFI_task = new myTimerTask(1);
+        closeWIFI_task = new myTimerTask(2);
+        open_timer.schedule(openWIFI_task, date, 24*60*60*1000);
+        if((starthour+endhour)*60+startmin+endmin >= 24*60){
+            date.setHours(23);
+            date.setMinutes(59);
+        }else{
+            date.setHours(starthour+endhour);
+            date.setMinutes(startmin+endmin);
+        }
+        close_timer.schedule(closeWIFI_task, date, 24*60*60*1000);
         
         return START_STICKY;
     }
@@ -80,6 +88,7 @@ public class wifiTimerService extends Service {
         @Override
         public void run() {
             // TODO Auto-generated method stub
+            Looper.prepare();
             my_handler = new Handler(){
                 
                 @Override
@@ -94,15 +103,22 @@ public class wifiTimerService extends Service {
                         WifiManager wifiM = (WifiManager) getSystemService(WIFI_SERVICE);
                         wifiM.setWifiEnabled(false);
                     }
+                    
                 }
             };
-            my_handler.sendMessage(msg);
+            
+            my_handler.handleMessage(msg);
+            Looper.loop();
+         
         }
     };
     @Override
     public void onDestroy() {
+        openWIFI_task.cancel();
+        closeWIFI_task.cancel();
         open_timer.cancel();
         close_timer.cancel();
+
     }
 
 
