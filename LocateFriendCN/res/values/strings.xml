@@ -1,0 +1,10 @@
+<resources>
+
+    <string name="app_name">LocateFriendCN</string>
+    <string name="hello">Hello World, PopwindowOnLeftActivity!</string>  
+    <string name="pop_left">弹出左侧菜单</string>
+    <string name="open">打开</string>
+    <string name="save">保存</string>
+    <string name="close">关闭</string>
+
+</resources>
